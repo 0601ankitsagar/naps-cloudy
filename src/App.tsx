@@ -95,8 +95,18 @@ export default function App() {
     return "#ef4444"; // Red
   };
 
+  const isApiKeyMissing = !process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === "MY_GEMINI_API_KEY";
+
   return (
     <div className="min-h-screen bg-[#fafafa] text-slate-900 font-sans selection:bg-indigo-100">
+      {/* API Key Warning */}
+      {isApiKeyMissing && (
+        <div className="bg-amber-50 border-b border-amber-100 p-3 text-center text-sm text-amber-800 font-medium flex items-center justify-center gap-2">
+          <AlertCircle className="w-4 h-4" />
+          Gemini API Key is missing. Please add GEMINI_API_KEY to your Vercel Environment Variables.
+        </div>
+      )}
+      
       {/* Navigation */}
       <nav className="border-bottom border-slate-200 bg-white/80 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
