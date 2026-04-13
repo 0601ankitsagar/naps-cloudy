@@ -1,0 +1,5 @@
+{
+  "name": "Naps Cloud",
+  "description": "AI Authenticator tool to verify document integrity and distinguish between human and AI-generated content.",
+  "requestFramePermissions": []
+}
