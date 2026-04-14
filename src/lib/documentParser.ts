@@ -2,7 +2,7 @@ import * as pdfjsLib from 'pdfjs-dist';
 import mammoth from 'mammoth';
 
 // Set up PDF.js worker
-pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.mjs`;
 
 export async function parsePDF(file: File): Promise<string> {
   const arrayBuffer = await file.arrayBuffer();
