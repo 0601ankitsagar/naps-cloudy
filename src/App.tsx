@@ -98,77 +98,95 @@ export default function App() {
   const isApiKeyMissing = !process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === "MY_GEMINI_API_KEY";
 
   return (
-    <div className="min-h-screen bg-[#fafafa] text-slate-900 font-sans selection:bg-indigo-100">
+    <div className="min-h-screen bg-[#020617] text-slate-200 font-sans selection:bg-indigo-500/30 overflow-x-hidden relative">
+      {/* Background Decorative Elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-indigo-600/20 rounded-full blur-[120px] animate-pulse" />
+        <div className="absolute top-[20%] -right-[10%] w-[30%] h-[30%] bg-blue-600/10 rounded-full blur-[100px]" />
+        <div className="absolute -bottom-[10%] left-[20%] w-[50%] h-[50%] bg-purple-600/10 rounded-full blur-[140px]" />
+      </div>
+
       {/* API Key Warning */}
       {isApiKeyMissing && (
-        <div className="bg-amber-50 border-b border-amber-100 p-3 text-center text-sm text-amber-800 font-medium flex items-center justify-center gap-2">
+        <div className="relative z-[60] bg-amber-500/10 backdrop-blur-md border-b border-amber-500/20 p-3 text-center text-sm text-amber-200 font-medium flex items-center justify-center gap-2">
           <AlertCircle className="w-4 h-4" />
           Gemini API Key is missing. Please add GEMINI_API_KEY to your Vercel Environment Variables.
         </div>
       )}
       
       {/* Navigation */}
-      <nav className="border-bottom border-slate-200 bg-white/80 backdrop-blur-md sticky top-0 z-50">
+      <nav className="relative z-50 border-b border-white/5 bg-slate-950/50 backdrop-blur-xl sticky top-0">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
-                <ShieldCheck className="text-white w-5 h-5" />
+          <div className="flex justify-between h-20 items-center">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                <ShieldCheck className="text-white w-6 h-6" />
               </div>
-              <span className="text-xl font-bold tracking-tight text-slate-900">Naps Cloud</span>
+              <span className="text-2xl font-black tracking-tighter text-white">NAPS<span className="text-indigo-500">CLOUD</span></span>
             </div>
-            <div className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
-              <a href="#" className="hover:text-indigo-600 transition-colors">How it works</a>
-              <a href="#" className="hover:text-indigo-600 transition-colors">Pricing</a>
-              <a href="#" className="hover:text-indigo-600 transition-colors">API</a>
-              <Button variant="outline" size="sm" className="rounded-full">Sign In</Button>
-              <Button size="sm" className="rounded-full bg-indigo-600 hover:bg-indigo-700">Get Started</Button>
+            <div className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-400">
+              <a href="#" className="hover:text-white transition-colors">Technology</a>
+              <a href="#" className="hover:text-white transition-colors">Enterprise</a>
+              <a href="#" className="hover:text-white transition-colors">Security</a>
+              <div className="h-4 w-px bg-white/10" />
+              <Button variant="ghost" size="sm" className="text-slate-300 hover:text-white hover:bg-white/5">Sign In</Button>
+              <Button size="sm" className="bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/20 px-6">Get Started</Button>
             </div>
           </div>
         </div>
       </nav>
 
-      <main className="max-w-5xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+      <main className="relative z-10 max-w-6xl mx-auto px-4 py-20 sm:px-6 lg:px-8">
         {/* Hero Section */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-20">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-bold uppercase tracking-widest mb-6"
+          >
+            <Zap className="w-3 h-3" />
+            Next-Gen AI Detection
+          </motion.div>
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900 mb-4"
+            className="text-5xl sm:text-7xl font-black tracking-tight text-white mb-6 leading-[1.1]"
           >
-            Verify Document <span className="text-indigo-600">Integrity</span>
+            Verify Your <br />
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-blue-400">Document Integrity</span>
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-lg text-slate-600 max-w-2xl mx-auto"
+            className="text-xl text-slate-400 max-w-2xl mx-auto font-medium leading-relaxed"
           >
-            Distinguish between human creativity and AI-generated content with our advanced linguistic analysis engine.
+            Distinguish between human creativity and AI-generated content with our advanced neural linguistic analysis engine.
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
           {/* Input Section */}
           <div className="lg:col-span-7">
-            <Card className="border-slate-200 shadow-sm overflow-hidden">
+            <Card className="bg-slate-900/40 backdrop-blur-xl border-white/10 shadow-2xl overflow-hidden ring-1 ring-white/5">
               <Tabs defaultValue="upload" className="w-full">
-                <TabsList className="w-full grid grid-cols-2 rounded-none bg-slate-50 border-b border-slate-200">
-                  <TabsTrigger value="upload" className="data-[state=active]:bg-white data-[state=active]:border-b-2 data-[state=active]:border-indigo-600 rounded-none py-3">
+                <TabsList className="w-full grid grid-cols-2 rounded-none bg-black/20 border-b border-white/5 p-0 h-14">
+                  <TabsTrigger value="upload" className="data-[state=active]:bg-white/5 data-[state=active]:text-white rounded-none h-full font-bold text-slate-400 transition-all">
                     <Upload className="w-4 h-4 mr-2" />
                     Upload File
                   </TabsTrigger>
-                  <TabsTrigger value="paste" className="data-[state=active]:bg-white data-[state=active]:border-b-2 data-[state=active]:border-indigo-600 rounded-none py-3">
+                  <TabsTrigger value="paste" className="data-[state=active]:bg-white/5 data-[state=active]:text-white rounded-none h-full font-bold text-slate-400 transition-all">
                     <FileText className="w-4 h-4 mr-2" />
                     Paste Text
                   </TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="upload" className="p-6 m-0">
+                <TabsContent value="upload" className="p-8 m-0">
                   <div 
                     onClick={() => fileInputRef.current?.click()}
-                    className="border-2 border-dashed border-slate-200 rounded-xl p-12 text-center hover:border-indigo-400 hover:bg-indigo-50/30 transition-all cursor-pointer group"
+                    className="relative group border-2 border-dashed border-white/10 rounded-2xl p-16 text-center hover:border-indigo-500/50 hover:bg-indigo-500/5 transition-all cursor-pointer overflow-hidden"
                   >
+                    <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                     <input 
                       type="file" 
                       ref={fileInputRef} 
@@ -176,37 +194,39 @@ export default function App() {
                       className="hidden" 
                       accept=".pdf,.docx,.txt"
                     />
-                    <div className="w-16 h-16 bg-indigo-50 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                      <Upload className="text-indigo-600 w-8 h-8" />
+                    <div className="relative z-10">
+                      <div className="w-20 h-20 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:bg-indigo-500/20 transition-all duration-500">
+                        <Upload className="text-indigo-400 w-10 h-10" />
+                      </div>
+                      <h3 className="text-xl font-bold text-white mb-2">
+                        {fileName || "Drop your file here"}
+                      </h3>
+                      <p className="text-slate-500 font-medium">
+                        PDF, DOCX, or TXT
+                      </p>
                     </div>
-                    <h3 className="text-lg font-semibold text-slate-900 mb-1">
-                      {fileName || "Click to upload or drag and drop"}
-                    </h3>
-                    <p className="text-sm text-slate-500">
-                      PDF, DOCX, or TXT
-                    </p>
                   </div>
                 </TabsContent>
 
-                <TabsContent value="paste" className="p-6 m-0">
+                <TabsContent value="paste" className="p-8 m-0">
                   <Textarea 
-                    placeholder="Paste your text here for instant analysis..." 
-                    className="min-h-[300px] mb-4 border-slate-200 focus:ring-indigo-500"
+                    placeholder="Paste your text here for deep analysis..." 
+                    className="min-h-[350px] mb-6 bg-black/20 border-white/10 focus:border-indigo-500/50 focus:ring-0 text-slate-200 placeholder:text-slate-600 rounded-xl resize-none p-6 text-lg leading-relaxed"
                     value={text}
                     onChange={(e) => setText(e.target.value)}
                   />
                   <Button 
                     onClick={handleTextAnalysis} 
                     disabled={isAnalyzing || !text.trim()}
-                    className="w-full bg-indigo-600 hover:bg-indigo-700 h-12 text-lg font-medium"
+                    className="w-full bg-indigo-600 hover:bg-indigo-500 h-14 text-lg font-bold shadow-xl shadow-indigo-600/20 rounded-xl transition-all active:scale-[0.98]"
                   >
                     {isAnalyzing ? (
                       <>
-                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                        Analyzing linguistic patterns...
+                        <Loader2 className="mr-3 h-6 w-6 animate-spin" />
+                        Neural Processing...
                       </>
                     ) : (
-                      "Verify Authenticity"
+                      "Analyze Authenticity"
                     )}
                   </Button>
                 </TabsContent>
@@ -217,10 +237,10 @@ export default function App() {
               <motion.div 
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mt-4 p-4 bg-red-50 border border-red-100 rounded-lg flex items-start gap-3 text-red-700"
+                className="mt-6 p-5 bg-red-500/10 border border-red-500/20 rounded-xl flex items-start gap-4 text-red-400"
               >
-                <AlertCircle className="w-5 h-5 mt-0.5 flex-shrink-0" />
-                <p className="text-sm">{error}</p>
+                <AlertCircle className="w-6 h-6 flex-shrink-0" />
+                <p className="text-sm font-medium">{error}</p>
               </motion.div>
             )}
           </div>
@@ -231,46 +251,55 @@ export default function App() {
               {!result && !isAnalyzing ? (
                 <motion.div
                   key="empty"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
                   className="h-full"
                 >
-                  <Card className="h-full border-slate-200 bg-slate-50/50 flex flex-col items-center justify-center p-8 text-center border-dashed">
-                    <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mb-4">
-                      <Search className="text-slate-400 w-8 h-8" />
+                  <Card className="h-full bg-slate-900/20 border-white/5 flex flex-col items-center justify-center p-12 text-center border-dashed border-2">
+                    <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mb-6">
+                      <Search className="text-slate-600 w-10 h-10" />
                     </div>
-                    <h3 className="text-lg font-semibold text-slate-900 mb-2">Ready to Analyze</h3>
-                    <p className="text-sm text-slate-500">
-                      Upload a document or paste text to see your authenticity score and detailed breakdown.
+                    <h3 className="text-xl font-bold text-white mb-3">Awaiting Input</h3>
+                    <p className="text-slate-500 font-medium leading-relaxed">
+                      Upload a document or paste text to generate a comprehensive authenticity report.
                     </p>
                   </Card>
                 </motion.div>
               ) : isAnalyzing ? (
                 <motion.div
                   key="loading"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
                   className="h-full"
                 >
-                  <Card className="h-full border-slate-200 p-8 flex flex-col items-center justify-center text-center">
-                    <div className="relative w-32 h-32 mb-8">
-                      <div className="absolute inset-0 border-4 border-indigo-100 rounded-full"></div>
-                      <div className="absolute inset-0 border-4 border-indigo-600 rounded-full border-t-transparent animate-spin"></div>
+                  <Card className="h-full bg-slate-900/40 backdrop-blur-xl border-white/10 p-12 flex flex-col items-center justify-center text-center">
+                    <div className="relative w-40 h-40 mb-10">
+                      <div className="absolute inset-0 border-4 border-white/5 rounded-full"></div>
+                      <div className="absolute inset-0 border-4 border-indigo-500 rounded-full border-t-transparent animate-spin"></div>
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <Zap className="text-indigo-600 w-10 h-10 animate-pulse" />
+                        <div className="w-24 h-24 bg-indigo-500/10 rounded-full flex items-center justify-center animate-pulse">
+                          <Zap className="text-indigo-400 w-12 h-12" />
+                        </div>
                       </div>
                     </div>
-                    <h3 className="text-xl font-bold text-slate-900 mb-2">Analyzing Patterns</h3>
-                    <div className="space-y-3 w-full max-w-xs">
-                      <div className="flex justify-between text-xs font-medium text-slate-500">
-                        <span>Linguistic analysis</span>
-                        <span>In progress...</span>
+                    <h3 className="text-2xl font-black text-white mb-4">Neural Analysis</h3>
+                    <div className="space-y-4 w-full max-w-xs">
+                      <div className="flex justify-between text-xs font-bold text-slate-400 uppercase tracking-widest">
+                        <span>Linguistic Scan</span>
+                        <span className="text-indigo-400">Active</span>
                       </div>
-                      <Progress value={66} className="h-1.5" />
-                      <p className="text-xs text-slate-400 italic">
-                        Checking perplexity and burstiness...
+                      <div className="h-2 bg-white/5 rounded-full overflow-hidden">
+                        <motion.div 
+                          initial={{ width: 0 }}
+                          animate={{ width: "100%" }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                          className="h-full bg-indigo-500"
+                        />
+                      </div>
+                      <p className="text-xs text-slate-500 font-medium italic">
+                        Calculating perplexity and semantic variance...
                       </p>
                     </div>
                   </Card>
@@ -280,86 +309,97 @@ export default function App() {
                   key="result"
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="space-y-6"
+                  className="space-y-8"
                 >
-                  <Card className="border-slate-200 shadow-lg overflow-hidden">
-                    <CardHeader className="bg-slate-50 border-b border-slate-200 pb-4">
+                  <Card className="bg-slate-900/60 backdrop-blur-2xl border-white/10 shadow-2xl overflow-hidden ring-1 ring-white/10">
+                    <CardHeader className="bg-white/5 border-b border-white/5 pb-6">
                       <div className="flex justify-between items-center">
-                        <CardTitle className="text-lg font-bold">Authenticity Score</CardTitle>
-                        <Badge variant={result.score >= 70 ? "default" : "destructive"} className={result.score >= 70 ? "bg-green-500" : ""}>
-                          {result.score >= 70 ? "Likely Human" : result.score >= 40 ? "Mixed Content" : "Likely AI"}
+                        <CardTitle className="text-xl font-black tracking-tight">ANALYSIS REPORT</CardTitle>
+                        <Badge className={`px-4 py-1 rounded-full font-bold text-xs uppercase tracking-widest ${
+                          result.score >= 70 ? "bg-green-500/20 text-green-400 border-green-500/30" : 
+                          result.score >= 40 ? "bg-amber-500/20 text-amber-400 border-amber-500/30" : 
+                          "bg-red-500/20 text-red-400 border-red-500/30"
+                        }`}>
+                          {result.score >= 70 ? "Human" : result.score >= 40 ? "Mixed" : "AI"}
                         </Badge>
                       </div>
                     </CardHeader>
-                    <CardContent className="pt-8 flex flex-col items-center">
-                      <div className="h-64 w-full relative">
+                    <CardContent className="pt-10 flex flex-col items-center">
+                      <div className="h-72 w-full relative">
                         <ResponsiveContainer width="100%" height="100%">
                           <PieChart>
                             <Pie
                               data={scoreData}
                               cx="50%"
                               cy="50%"
-                              innerRadius={80}
-                              outerRadius={100}
+                              innerRadius={90}
+                              outerRadius={115}
                               startAngle={180}
                               endAngle={0}
                               paddingAngle={0}
                               dataKey="value"
                             >
                               <Cell fill={getScoreColor(result.score)} />
-                              <Cell fill="#f1f5f9" />
+                              <Cell fill="rgba(255,255,255,0.05)" />
                               <Label
-                                value={`${result.score}%`}
-                                position="center"
-                                className="text-4xl font-bold fill-slate-900"
+                                content={({ viewBox }) => {
+                                  const { cx, cy } = viewBox as any;
+                                  return (
+                                    <text x={cx} y={cy} textAnchor="middle" dominantBaseline="middle">
+                                      <tspan x={cx} y={cy - 10} className="text-6xl font-black fill-white">
+                                        {result.score}
+                                      </tspan>
+                                      <tspan x={cx} y={cy + 30} className="text-sm font-bold fill-slate-500 uppercase tracking-[0.2em]">
+                                        AUTHENTIC
+                                      </tspan>
+                                    </text>
+                                  );
+                                }}
                               />
                             </Pie>
                           </PieChart>
                         </ResponsiveContainer>
-                        <div className="absolute bottom-12 left-0 right-0 text-center">
-                          <span className="text-sm font-medium text-slate-500 uppercase tracking-widest">Authentic</span>
-                        </div>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-4 w-full mt-4">
-                        <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                          <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold block mb-1">Perplexity</span>
-                          <span className="text-lg font-mono font-bold text-slate-700">{result.breakdown.perplexity.toFixed(1)}</span>
+                      <div className="grid grid-cols-2 gap-6 w-full mt-4">
+                        <div className="p-5 bg-white/5 rounded-2xl border border-white/5 group hover:bg-white/10 transition-colors">
+                          <span className="text-[10px] uppercase tracking-[0.2em] text-slate-500 font-black block mb-2">Perplexity</span>
+                          <span className="text-2xl font-mono font-bold text-white">{result.breakdown.perplexity.toFixed(1)}</span>
                         </div>
-                        <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                          <span className="text-[10px] uppercase tracking-wider text-slate-400 font-bold block mb-1">Burstiness</span>
-                          <span className="text-lg font-mono font-bold text-slate-700">{result.breakdown.burstiness.toFixed(1)}</span>
+                        <div className="p-5 bg-white/5 rounded-2xl border border-white/5 group hover:bg-white/10 transition-colors">
+                          <span className="text-[10px] uppercase tracking-[0.2em] text-slate-500 font-black block mb-2">Burstiness</span>
+                          <span className="text-2xl font-mono font-bold text-white">{result.breakdown.burstiness.toFixed(1)}</span>
                         </div>
                       </div>
                     </CardContent>
-                    <CardFooter className="flex flex-col gap-4 bg-slate-50/50 p-6">
+                    <CardFooter className="flex flex-col gap-6 bg-black/20 p-8">
                       <div className="w-full">
-                        <h4 className="text-sm font-bold text-slate-900 mb-2 flex items-center gap-2">
-                          <Info className="w-4 h-4 text-indigo-600" />
-                          Analysis Summary
+                        <h4 className="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-4 flex items-center gap-2">
+                          <Info className="w-4 h-4 text-indigo-500" />
+                          Executive Summary
                         </h4>
-                        <p className="text-sm text-slate-600 leading-relaxed">
+                        <p className="text-slate-300 leading-relaxed font-medium">
                           {result.analysis}
                         </p>
                       </div>
-                      <Button onClick={reset} variant="outline" className="w-full border-slate-200">
-                        Analyze Another
+                      <Button onClick={reset} variant="outline" className="w-full border-white/10 hover:bg-white/5 text-white font-bold h-12 rounded-xl">
+                        New Analysis
                       </Button>
                     </CardFooter>
                   </Card>
 
                   {/* Highlights */}
-                  <Card className="border-slate-200 shadow-sm">
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-sm font-bold uppercase tracking-wider text-slate-400">Key Findings</CardTitle>
+                  <Card className="bg-slate-900/40 border-white/5 shadow-xl">
+                    <CardHeader className="pb-4">
+                      <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Neural Markers</CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-4">
+                    <CardContent className="space-y-6">
                       {result.highlights.map((highlight, idx) => (
-                        <div key={idx} className="flex gap-3">
-                          <div className={`mt-1 w-2 h-2 rounded-full flex-shrink-0 ${highlight.type === 'human' ? 'bg-green-500' : 'bg-red-500'}`} />
+                        <div key={idx} className="flex gap-4 group">
+                          <div className={`mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0 shadow-[0_0_10px_rgba(0,0,0,0.5)] ${highlight.type === 'human' ? 'bg-green-500 shadow-green-500/50' : 'bg-red-500 shadow-red-500/50'}`} />
                           <div>
-                            <p className="text-sm font-medium text-slate-900 italic mb-1">"{highlight.text.slice(0, 100)}..."</p>
-                            <p className="text-xs text-slate-500">{highlight.reason}</p>
+                            <p className="text-sm font-bold text-white italic mb-2 leading-relaxed group-hover:text-indigo-300 transition-colors">"{highlight.text.slice(0, 120)}..."</p>
+                            <p className="text-xs text-slate-500 font-medium leading-relaxed">{highlight.reason}</p>
                           </div>
                         </div>
                       ))}
@@ -372,46 +412,47 @@ export default function App() {
         </div>
 
         {/* Features Section */}
-        <div className="mt-24 grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="p-6 bg-white rounded-2xl border border-slate-100 shadow-sm">
-            <div className="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center mb-4">
-              <Zap className="text-indigo-600 w-5 h-5" />
+        <div className="mt-40 grid grid-cols-1 md:grid-cols-3 gap-10">
+          <div className="group p-8 bg-slate-900/40 rounded-3xl border border-white/5 hover:border-indigo-500/30 transition-all duration-500 hover:-translate-y-2">
+            <div className="w-14 h-14 bg-indigo-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <Zap className="text-indigo-400 w-7 h-7" />
             </div>
-            <h3 className="text-lg font-bold mb-2">Instant Analysis</h3>
-            <p className="text-sm text-slate-500">Get results in seconds with our high-performance inference engine.</p>
+            <h3 className="text-xl font-bold text-white mb-3">Instant Inference</h3>
+            <p className="text-slate-500 font-medium leading-relaxed">High-performance neural processing delivers results in milliseconds.</p>
           </div>
-          <div className="p-6 bg-white rounded-2xl border border-slate-100 shadow-sm">
-            <div className="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center mb-4">
-              <Lock className="text-green-600 w-5 h-5" />
+          <div className="group p-8 bg-slate-900/40 rounded-3xl border border-white/5 hover:border-green-500/30 transition-all duration-500 hover:-translate-y-2">
+            <div className="w-14 h-14 bg-green-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <Lock className="text-green-400 w-7 h-7" />
             </div>
-            <h3 className="text-lg font-bold mb-2">Privacy First</h3>
-            <p className="text-sm text-slate-500">Your documents are never stored. Analysis happens in real-time and data is discarded.</p>
+            <h3 className="text-xl font-bold text-white mb-3">Zero Retention</h3>
+            <p className="text-slate-500 font-medium leading-relaxed">Your data is processed in volatile memory and instantly purged post-analysis.</p>
           </div>
-          <div className="p-6 bg-white rounded-2xl border border-slate-100 shadow-sm">
-            <div className="w-10 h-10 bg-amber-50 rounded-lg flex items-center justify-center mb-4">
-              <History className="text-amber-600 w-5 h-5" />
+          <div className="group p-8 bg-slate-900/40 rounded-3xl border border-white/5 hover:border-amber-500/30 transition-all duration-500 hover:-translate-y-2">
+            <div className="w-14 h-14 bg-amber-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <History className="text-amber-400 w-7 h-7" />
             </div>
-            <h3 className="text-lg font-bold mb-2">Deep Insights</h3>
-            <p className="text-sm text-slate-500">We analyze perplexity, burstiness, and semantic structure for maximum accuracy.</p>
+            <h3 className="text-xl font-bold text-white mb-3">Semantic Depth</h3>
+            <p className="text-slate-500 font-medium leading-relaxed">Deep-layer analysis of perplexity and burstiness for unmatched precision.</p>
           </div>
         </div>
       </main>
 
-      <footer className="border-t border-slate-200 bg-white py-12 mt-24">
+      <footer className="border-t border-white/5 bg-black/40 backdrop-blur-xl py-20 mt-40">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <div className="w-6 h-6 bg-slate-900 rounded flex items-center justify-center">
-              <ShieldCheck className="text-white w-4 h-4" />
+          <div className="flex items-center justify-center gap-3 mb-8">
+            <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+              <ShieldCheck className="text-black w-5 h-5" />
             </div>
-            <span className="text-lg font-bold tracking-tight">Naps Cloud</span>
+            <span className="text-xl font-black tracking-tighter text-white uppercase">NAPS<span className="text-indigo-500">CLOUD</span></span>
           </div>
-          <p className="text-sm text-slate-500 mb-8">Ensuring transparency and trust in the age of AI.</p>
-          <div className="flex justify-center gap-8 text-sm font-medium text-slate-400">
-            <a href="#" className="hover:text-slate-900">Privacy Policy</a>
-            <a href="#" className="hover:text-slate-900">Terms of Service</a>
-            <a href="#" className="hover:text-slate-900">Contact</a>
+          <p className="text-slate-500 font-medium mb-12 max-w-md mx-auto">Ensuring transparency and trust in the era of synthetic intelligence.</p>
+          <div className="flex justify-center gap-12 text-xs font-black uppercase tracking-[0.2em] text-slate-500">
+            <a href="#" className="hover:text-white transition-colors">Privacy</a>
+            <a href="#" className="hover:text-white transition-colors">Terms</a>
+            <a href="#" className="hover:text-white transition-colors">API</a>
+            <a href="#" className="hover:text-white transition-colors">Contact</a>
           </div>
-          <p className="mt-8 text-xs text-slate-400">© 2026 Naps Cloud. All rights reserved.</p>
+          <p className="mt-16 text-[10px] font-bold text-slate-700 uppercase tracking-[0.3em]">© 2026 NAPS CLOUD. SECURED BY NEURAL PROTOCOL.</p>
         </div>
       </footer>
     </div>
