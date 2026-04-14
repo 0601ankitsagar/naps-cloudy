@@ -301,7 +301,7 @@ export default function App() {
           {/* Input Section */}
           <div className="lg:col-span-7">
             <Card className="bg-slate-900/40 backdrop-blur-xl border-white/10 shadow-2xl overflow-hidden ring-1 ring-white/5">
-              <Tabs defaultValue="upload" className="w-full">
+              <Tabs defaultValue="upload" className="w-full" onValueChange={handleReset}>
                 <TabsList className="w-full grid grid-cols-2 rounded-none bg-black/20 border-b border-white/5 p-0 h-14">
                   <TabsTrigger value="upload" className="data-[state=active]:bg-white/5 data-[state=active]:text-white rounded-none h-full font-bold text-slate-400 transition-all">
                     <Upload className="w-4 h-4 mr-2" />
