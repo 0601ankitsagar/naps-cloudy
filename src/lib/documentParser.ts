@@ -1,10 +1,8 @@
 import * as pdfjsLib from 'pdfjs-dist';
 import mammoth from 'mammoth';
-// @ts-ignore - Vite specific import
-import pdfWorker from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
 
-// Set up PDF.js worker using Vite's URL import for local reliability
-pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
+// Set up PDF.js worker using a reliable CDN to avoid local worker constructor issues
+pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/5.6.205/pdf.worker.min.mjs`;
 
 export async function parsePDF(file: File): Promise<string> {
   const arrayBuffer = await file.arrayBuffer();

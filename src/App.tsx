@@ -601,7 +601,7 @@ export default function App() {
           </div>
           <div className="group p-8 bg-slate-900/40 rounded-3xl border border-white/5 hover:border-amber-500/30 transition-all duration-500 hover:-translate-y-2">
             <div className="w-14 h-14 bg-amber-500/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-              <History className="text-amber-400 w-7 h-7" />
+              <HistoryIcon className="text-amber-400 w-7 h-7" />
             </div>
             <h3 className="text-xl font-bold text-white mb-3">Semantic Depth</h3>
             <p className="text-slate-500 font-medium leading-relaxed">Deep-layer analysis of perplexity and burstiness for unmatched precision.</p>
