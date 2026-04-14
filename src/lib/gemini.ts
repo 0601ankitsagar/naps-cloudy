@@ -32,7 +32,7 @@ export async function analyzeAuthenticity(text: string): Promise<AuthenticityRes
   try {
     const ai = getAI();
     const response = await ai.models.generateContent({
-      model: "gemini-1.5-flash-latest",
+      model: "gemini-flash-latest",
       contents: `Analyze the following text for AI-generated patterns versus human creativity. 
       Provide an "Authenticity Score" from 0 to 100 (100 = definitely human, 0 = definitely AI).
       Also provide a detailed analysis of linguistic patterns, perplexity, and burstiness.
