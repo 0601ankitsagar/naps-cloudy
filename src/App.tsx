@@ -15,10 +15,13 @@ import {
   Loader2, 
   ChevronRight,
   Info,
-  History,
+  History as HistoryIcon,
   Zap,
   Lock,
-  Search
+  Search,
+  RotateCcw,
+  Trash2,
+  Clock
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -31,13 +34,41 @@ import { analyzeAuthenticity, AuthenticityResult } from "@/src/lib/gemini";
 import { extractText } from "@/src/lib/documentParser";
 import { PieChart, Pie, Cell, ResponsiveContainer, Label } from "recharts";
 
+interface HistoryItem {
+  id: string;
+  timestamp: number;
+  fileName: string | null;
+  textPreview: string;
+  result: AuthenticityResult;
+}
+
 export default function App() {
   const [text, setText] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState<AuthenticityResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
+  const [history, setHistory] = useState<HistoryItem[]>(() => {
+    const saved = localStorage.getItem("naps_history");
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [showHistory, setShowHistory] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  React.useEffect(() => {
+    localStorage.setItem("naps_history", JSON.stringify(history));
+  }, [history]);
+
+  const addToHistory = (analysisResult: AuthenticityResult, name: string | null, content: string) => {
+    const newItem: HistoryItem = {
+      id: Math.random().toString(36).substring(7),
+      timestamp: Date.now(),
+      fileName: name,
+      textPreview: content.slice(0, 100),
+      result: analysisResult
+    };
+    setHistory(prev => [newItem, ...prev].slice(0, 20)); // Keep last 20 items
+  };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -53,6 +84,7 @@ export default function App() {
       setText(extractedText);
       const analysis = await analyzeAuthenticity(extractedText);
       setResult(analysis);
+      addToHistory(analysis, file.name, extractedText);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to process document");
     } finally {
@@ -70,6 +102,7 @@ export default function App() {
     try {
       const analysis = await analyzeAuthenticity(text);
       setResult(analysis);
+      addToHistory(analysis, null, text);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to analyze text");
     } finally {
@@ -77,11 +110,25 @@ export default function App() {
     }
   };
 
-  const reset = () => {
+  const handleReset = () => {
     setResult(null);
     setText("");
     setFileName(null);
     setError(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const clearHistory = () => {
+    setHistory([]);
+    localStorage.removeItem("naps_history");
+  };
+
+  const loadFromHistory = (item: HistoryItem) => {
+    setResult(item.result);
+    setText(item.textPreview + "...");
+    setFileName(item.fileName);
+    setShowHistory(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const scoreData = result ? [
@@ -114,6 +161,88 @@ export default function App() {
         </div>
       )}
       
+      {/* History Sidebar */}
+      <AnimatePresence>
+        {showHistory && (
+          <>
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowHistory(false)}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100]"
+            />
+            <motion.div 
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed right-0 top-0 bottom-0 w-full max-w-md bg-slate-950 border-l border-white/10 z-[101] shadow-2xl flex flex-col"
+            >
+              <div className="p-6 border-b border-white/10 flex justify-between items-center">
+                <div className="flex items-center gap-3">
+                  <HistoryIcon className="w-5 h-5 text-indigo-400" />
+                  <h2 className="text-xl font-black text-white tracking-tight">ANALYSIS HISTORY</h2>
+                </div>
+                <Button variant="ghost" size="icon" onClick={() => setShowHistory(false)} className="text-slate-400 hover:text-white">
+                  <ChevronRight className="w-6 h-6" />
+                </Button>
+              </div>
+              
+              <div className="flex-1 overflow-y-auto p-6 space-y-4">
+                {history.length === 0 ? (
+                  <div className="h-full flex flex-col items-center justify-center text-center opacity-50">
+                    <Clock className="w-12 h-12 mb-4" />
+                    <p className="font-bold">No history yet</p>
+                    <p className="text-xs">Your recent analyses will appear here</p>
+                  </div>
+                ) : (
+                  history.map((item) => (
+                    <div 
+                      key={item.id}
+                      onClick={() => loadFromHistory(item)}
+                      className="p-4 bg-white/5 border border-white/5 rounded-xl hover:bg-white/10 transition-all cursor-pointer group"
+                    >
+                      <div className="flex justify-between items-start mb-2">
+                        <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
+                          {new Date(item.timestamp).toLocaleDateString()}
+                        </span>
+                        <Badge className={`text-[10px] ${
+                          item.result.score >= 70 ? "bg-green-500/20 text-green-400" : 
+                          item.result.score >= 40 ? "bg-amber-500/20 text-amber-400" : 
+                          "bg-red-500/20 text-red-400"
+                        }`}>
+                          Score: {item.result.score}
+                        </Badge>
+                      </div>
+                      <h4 className="text-sm font-bold text-white truncate mb-1">
+                        {item.fileName || "Text Analysis"}
+                      </h4>
+                      <p className="text-xs text-slate-500 line-clamp-2">
+                        {item.textPreview}
+                      </p>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              {history.length > 0 && (
+                <div className="p-6 border-t border-white/10">
+                  <Button 
+                    variant="ghost" 
+                    onClick={clearHistory}
+                    className="w-full text-red-400 hover:text-red-300 hover:bg-red-500/10 gap-2 font-bold"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    Clear History
+                  </Button>
+                </div>
+              )}
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
       {/* Navigation */}
       <nav className="relative z-50 border-b border-white/5 bg-slate-950/50 backdrop-blur-xl sticky top-0">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -125,9 +254,12 @@ export default function App() {
               <span className="text-2xl font-black tracking-tighter text-white">NAPS<span className="text-indigo-500">CLOUD</span></span>
             </div>
             <div className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-400">
+              <button onClick={() => setShowHistory(!showHistory)} className="hover:text-white transition-colors flex items-center gap-2">
+                <Clock className="w-4 h-4" />
+                History
+              </button>
               <a href="#" className="hover:text-white transition-colors">Technology</a>
               <a href="#" className="hover:text-white transition-colors">Enterprise</a>
-              <a href="#" className="hover:text-white transition-colors">Security</a>
               <div className="h-4 w-px bg-white/10" />
               <Button variant="ghost" size="sm" className="text-slate-300 hover:text-white hover:bg-white/5">Sign In</Button>
               <Button size="sm" className="bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/20 px-6">Get Started</Button>
@@ -182,39 +314,79 @@ export default function App() {
                 </TabsList>
 
                 <TabsContent value="upload" className="p-8 m-0">
-                  <div 
-                    onClick={() => fileInputRef.current?.click()}
-                    className="relative group border-2 border-dashed border-white/10 rounded-2xl p-16 text-center hover:border-indigo-500/50 hover:bg-indigo-500/5 transition-all cursor-pointer overflow-hidden"
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                    <input 
-                      type="file" 
-                      ref={fileInputRef} 
-                      onChange={handleFileUpload} 
-                      className="hidden" 
-                      accept=".pdf,.docx,.txt"
-                    />
-                    <div className="relative z-10">
-                      <div className="w-20 h-20 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:bg-indigo-500/20 transition-all duration-500">
-                        <Upload className="text-indigo-400 w-10 h-10" />
+                  {fileName ? (
+                    <div className="border-2 border-indigo-500/30 bg-indigo-500/5 rounded-2xl p-12 text-center relative group">
+                      <div className="w-16 h-16 bg-indigo-500/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+                        <FileText className="text-indigo-400 w-8 h-8" />
                       </div>
-                      <h3 className="text-xl font-bold text-white mb-2">
-                        {fileName || "Drop your file here"}
-                      </h3>
-                      <p className="text-slate-500 font-medium">
-                        PDF, DOCX, or TXT
-                      </p>
+                      <h3 className="text-xl font-bold text-white mb-2">{fileName}</h3>
+                      <p className="text-slate-400 text-sm mb-6">Document ready for analysis</p>
+                      <div className="flex gap-3 justify-center">
+                        <Button 
+                          onClick={() => fileInputRef.current?.click()}
+                          variant="outline" 
+                          className="border-white/10 hover:bg-white/5"
+                        >
+                          Change File
+                        </Button>
+                        <Button 
+                          onClick={handleReset}
+                          variant="ghost" 
+                          className="text-slate-400 hover:text-white"
+                        >
+                          <RotateCcw className="w-4 h-4 mr-2" />
+                          Reset
+                        </Button>
+                      </div>
                     </div>
-                  </div>
+                  ) : (
+                    <div 
+                      onClick={() => fileInputRef.current?.click()}
+                      className="relative group border-2 border-dashed border-white/10 rounded-2xl p-16 text-center hover:border-indigo-500/50 hover:bg-indigo-500/5 transition-all cursor-pointer overflow-hidden"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                      <input 
+                        type="file" 
+                        ref={fileInputRef} 
+                        onChange={handleFileUpload} 
+                        className="hidden" 
+                        accept=".pdf,.docx,.txt"
+                      />
+                      <div className="relative z-10">
+                        <div className="w-20 h-20 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:bg-indigo-500/20 transition-all duration-500">
+                          <Upload className="text-indigo-400 w-10 h-10" />
+                        </div>
+                        <h3 className="text-xl font-bold text-white mb-2">
+                          Drop your file here
+                        </h3>
+                        <p className="text-slate-500 font-medium">
+                          PDF, DOCX, or TXT
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </TabsContent>
 
                 <TabsContent value="paste" className="p-8 m-0">
-                  <Textarea 
-                    placeholder="Paste your text here for deep analysis..." 
-                    className="min-h-[350px] mb-6 bg-black/20 border-white/10 focus:border-indigo-500/50 focus:ring-0 text-slate-200 placeholder:text-slate-600 rounded-xl resize-none p-6 text-lg leading-relaxed"
-                    value={text}
-                    onChange={(e) => setText(e.target.value)}
-                  />
+                  <div className="relative">
+                    <Textarea 
+                      placeholder="Paste your text here for deep analysis..." 
+                      className="min-h-[350px] mb-6 bg-black/20 border-white/10 focus:border-indigo-500/50 focus:ring-0 text-slate-200 placeholder:text-slate-600 rounded-xl resize-none p-6 text-lg leading-relaxed"
+                      value={text}
+                      onChange={(e) => setText(e.target.value)}
+                    />
+                    {text && (
+                      <Button 
+                        onClick={handleReset}
+                        variant="ghost" 
+                        size="sm"
+                        className="absolute top-4 right-4 text-slate-500 hover:text-white"
+                      >
+                        <RotateCcw className="w-4 h-4 mr-2" />
+                        Reset
+                      </Button>
+                    )}
+                  </div>
                   <Button 
                     onClick={handleTextAnalysis} 
                     disabled={isAnalyzing || !text.trim()}
@@ -382,7 +554,7 @@ export default function App() {
                           {result.analysis}
                         </p>
                       </div>
-                      <Button onClick={reset} variant="outline" className="w-full border-white/10 hover:bg-white/5 text-white font-bold h-12 rounded-xl">
+                      <Button onClick={handleReset} variant="outline" className="w-full border-white/10 hover:bg-white/5 text-white font-bold h-12 rounded-xl">
                         New Analysis
                       </Button>
                     </CardFooter>
