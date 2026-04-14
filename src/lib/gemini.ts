@@ -33,13 +33,24 @@ export async function analyzeAuthenticity(text: string): Promise<AuthenticityRes
     const ai = getAI();
     const response = await ai.models.generateContent({
       model: "gemini-flash-latest",
-      contents: `Analyze the following text for AI-generated patterns versus human creativity. 
-      Provide an "Authenticity Score" from 0 to 100 (100 = definitely human, 0 = definitely AI).
-      Also provide a detailed analysis of linguistic patterns, perplexity, and burstiness.
-      Identify specific segments that feel particularly AI-like or particularly human.
+      contents: `You are an expert forensic linguist specializing in detecting AI-generated content. 
+      Analyze the following text with extreme scrutiny for markers of Large Language Model (LLM) generation versus genuine human creativity.
+
+      CRITERIA FOR ANALYSIS:
+      1. PERPLEXITY: AI text is often highly predictable. Look for "safe" word choices and lack of linguistic surprises.
+      2. BURSTINESS: AI tends to produce uniform sentence lengths and structures. Human writing has "bursts" of varied complexity.
+      3. TONE & STYLE: Look for the "AI voice"—overly formal, neutral, repetitive transitions (e.g., "Furthermore", "In conclusion"), and a lack of personal idiosyncratic flair.
+      4. EMOTIONAL DEPTH: AI often simulates emotion but lacks the raw, sometimes messy, resonance of human experience.
+      5. LOGICAL STRUCTURE: AI is very linear. Human thought often has creative leaps or subtle inconsistencies.
+
+      SCORING (0-100):
+      - 0-30: High confidence AI (Uniform, predictable, neutral).
+      - 31-60: Likely AI or heavily AI-assisted/edited.
+      - 61-85: Likely Human (Some creative variance, personal voice).
+      - 86-100: Definitely Human (High burstiness, unique style, emotional resonance).
 
       Text to analyze:
-      ${text}
+      "${text}"
       `,
       config: {
         responseMimeType: "application/json",
